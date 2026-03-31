@@ -1,11 +1,137 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>FIRST WEB-APP</title>
-    </head>
-    <body>
-        <h1>Welcome to Geospatial Web Mapping</h1>
-        <p>This is your first Flask app.</p>
-        <li><a href="map">Map View</a></li>
-    </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoSync - Geospatial Intelligence</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .content {
+      max-width: 600px;
+      color: white;
+    }
+
+    .logo {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature p {
+      font-size: 0.95rem;
+    }
+
+    .cta-link {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: white;
+      color: #667eea;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <div class="logo">🌍</div>
+      <h1>GeoSync</h1>
+      <p class="subtitle">Geospatial intelligence made simple</p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">📡</div>
+          <p>Real-time mapping</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔬</div>
+          <p>Data analysis</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🧭</div>
+          <p>Global coverage</p>
+        </div>
+      </div>
+
+      <a href="map" class="cta-link">View map →</a>
+    </div>
+  </div>
+</body>
 </html>

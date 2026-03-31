@@ -40,18 +40,20 @@ def map_view():
 
     # adding boundary data - mw shapefile
 
-    for idx, dist in mw_admin.iterrows():
-        folium.GeoJson(
-            mw_admin.to_json(), 
-            name = "Malawi Boundaries", 
-            tooltip = folium.GeoJson(
-                dist["geometry"].__geo_interface__,  # single feature geometry
-                name=f"District {dist['adm2_name']}",
-                tooltip=dist['adm2_name']
-                )
-                                            
-            ).add_to(m)
-    
+    # for idx, dist in mw_admin.iterrows():
+    folium.GeoJson(
+        mw_admin.to_json(), 
+        name = "Malawi Boundaries", 
+        style_function = lambda x: { 
+            "fillColor": ("#f3f3f31c"), 
+            "color": "#000000da", "weight": 2},
+        tooltip = folium.GeoJsonTooltip(
+            fields=['adm2_name'], 
+            aliases=['District:']
+            )
+                                        
+        ).add_to(m)
+
 
     # adding layer control option 
     folium.LayerControl().add_to(m)
