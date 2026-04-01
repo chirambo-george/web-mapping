@@ -23,6 +23,7 @@ def map_view():
     # Convert Timestamp columns to string
     for col in mw_boundary.select_dtypes(include=["datetime64[ns]"]).columns:
         mw_boundary[col] = mw_boundary[col].astype(str)
+        
     # adding a geojson layer 
     folium.GeoJson(
         mw_boundary.to_json(),
@@ -37,7 +38,12 @@ def map_view():
         popup = folium.GeoJsonPopup(
             fields=['adm1_name', 'adm2_name'], 
             aliases=['Region:', 'District:']
-        )
+        ),
+        highlight_function=lambda feature: {
+            'weight': 3,
+            'color': "#b4474792", # Change to red on hover/click instead of black
+            'fillColor': "#00ffff92"
+        }
     ).add_to(m)
 
     # Converting to HTML and rendering 
