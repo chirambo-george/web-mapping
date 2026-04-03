@@ -1,22 +1,333 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{% block title %}Geospatial Web Mapping{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Simple Sidebar</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; }
-        nav { background: #333; padding: 15px; }
-        nav a { color: white; text-decoration: none; margin-right: 20px; }
-        .container { padding: 20px; }
+        :root {
+            --primary-blue: #3b5bdb;
+            --sidebar-bg: #f5f5f5;
+            --sidebar-text: #495057;
+            --border-light: #e9ecef;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 2px solid var(--primary-blue);
+            padding: 1rem 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--text-dark) !important;
+            font-size: 1.1rem;
+            margin-left: 1rem;
+        }
+
+        .toggle-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(59, 91, 219, 0.2);
+        }
+
+        .toggle-btn:hover {
+            background: #2d47a5;
+            box-shadow: 0 4px 12px rgba(59, 91, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-light);
+            min-height: 100vh;
+            padding: 2rem 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: margin-left 0.3s ease;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            margin-left: -240px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin: 0;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: rgba(59, 91, 219, 0.1);
+            color: var(--primary-blue);
+            border-left-color: var(--primary-blue);
+            padding-left: 1.8rem;
+        }
+
+        .sidebar-nav a.active {
+            background-color: rgba(59, 91, 219, 0.15);
+            color: var(--primary-blue);
+            border-left-color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 240px;
+            padding: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .page-content {
+            padding: 3rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Code highlighting */
+        .code-highlight {
+            background-color: #f8f9fa;
+            color: #e83e8c;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .sidebar.collapsed {
+                margin-left: -220px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+            }
+
+            .page-content {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1rem;
+                margin-left: 0.5rem;
+            }
+
+            .toggle-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                height: calc(100vh - 70px);
+                margin-left: 0;
+                border-right: 1px solid var(--border-light);
+                border-bottom: none;
+            }
+
+            .sidebar.collapsed {
+                margin-left: -100%;
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .main-content.expanded {
+                margin-left: 0;
+            }
+
+            .page-content {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                padding: 0.75rem 0;
+            }
+
+            .navbar-brand {
+                font-size: 0.95rem;
+            }
+
+            .page-content {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Scrollbar styling */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #d0d0d0;
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #b0b0b0;
+        }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/map">Map</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <span class="navbar-brand">2018 MPHC VIEWER</span>
+            <button class="toggle-btn" id="sidebarToggle">
+                <i class="fas fa-bars"></i> Toggle Menu
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="color: var(--text-muted);">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-    <div class="container">
-        {% block content %}{% endblock %}
+
+    <!-- Sidebar -->
+    <div class="sidebar collapsed" id="sidebar">
+        <ul class="sidebar-nav">
+            <li><a href="#" class="active"><i class="fas fa-th-large" style="margin-right: 0.75rem; width: 20px;"></i>Dashboard</a></li>
+            <li><a href="#"><i class="fas fa-bolt" style="margin-right: 0.75rem; width: 20px;"></i>Shortcuts</a></li>
+            <li><a href="#"><i class="fas fa-eye" style="margin-right: 0.75rem; width: 20px;"></i>Overview</a></li>
+            <li><a href="#"><i class="fas fa-calendar" style="margin-right: 0.75rem; width: 20px;"></i>Events</a></li>
+            <li style="margin-top: 2rem; padding: 0 1.5rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Account</li>
+            <li><a href="#"><i class="fas fa-user-circle" style="margin-right: 0.75rem; width: 20px;"></i>Profile</a></li>
+            <li><a href="#"><i class="fas fa-info-circle" style="margin-right: 0.75rem; width: 20px;"></i>Status</a></li>
+        </ul>
     </div>
+
+    <!-- Main Content -->
+    <div class="main-content expanded" id="mainContent">
+        <div class="page-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        });
+
+        // Handle window resize to show/hide sidebar appropriately
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -11,9 +11,12 @@ def index():
 
 # map view 
 @app.route('/map')
+
 def map_view():
 
+    # loading admin data geojson
     mw_boundary =  geopandas.read_file('week-01/geo-web-mapping/data/mw_admin.geojson')
+    
     # initializing map object / { the basemap }
     m = folium.Map(
         location = [-13.983, 33.783],
@@ -33,7 +36,6 @@ def map_view():
         tooltip = folium.GeoJsonTooltip(
             fields=['adm2_name'],
             aliases = ['District:']
-            
         ),
         popup = folium.GeoJsonPopup(
             fields=['adm1_name', 'adm2_name'], 
@@ -42,13 +44,18 @@ def map_view():
         highlight_function=lambda feature: {
             'weight': 3,
             'color': "#b4474792", # Change to red on hover/click instead of black
-            'fillColor': "#00ffff92"
+            'fillColor': "#f2ff0092"
         }
     ).add_to(m)
 
+    # adding layer control
+    folium.LayerControl().add_to(m)
+
+
     # Converting to HTML and rendering 
     map_html = m._repr_html_()
-    return render_template('map.html', map = map_html)
+    return render_template('map.html', 
+                           map = map_html)
 
 
 if __name__ == '__main__':
